@@ -1,0 +1,62 @@
+# Git 忽略文件配置
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Maven
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+.env.*
+!.env.deploy.example
+!**/.env.example
+
+# 日志
+*.log
+logs/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 数据库
+*.db
+*.sqlite
+database/*.sql
+database/*.dump
+database/*.bak
+
+# 密钥、证书与备份
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.dump
+*.bak
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*credentials*.txt
+*secrets*.txt
+
+# 临时文件
+*.tmp
+*.temp

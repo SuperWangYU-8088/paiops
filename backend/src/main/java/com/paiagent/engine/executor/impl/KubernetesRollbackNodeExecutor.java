@@ -1,0 +1,19 @@
+package com.paiagent.engine.executor.impl;
+
+import com.paiagent.service.ConnectorCredentialService;
+import org.springframework.stereotype.Component;
+
+/** 为工厂注册 kubernetes_rollback，执行逻辑由父类统一实施。 */
+@Component
+public class KubernetesRollbackNodeExecutor extends KubernetesActionNodeExecutor {
+
+    public KubernetesRollbackNodeExecutor(OutboundHttpPolicy httpPolicy,
+                                          ConnectorCredentialService credentialService) {
+        super(httpPolicy, credentialService);
+    }
+
+    @Override
+    public String getSupportedNodeType() {
+        return "kubernetes_rollback";
+    }
+}

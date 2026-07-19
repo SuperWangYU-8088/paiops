@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <!--
+    构建镜像时把全部 Maven 仓库统一指向可配置的国内镜像。
+    项目依赖 Spring AI 里程碑版本，直接访问 repo.spring.io 在部分内网环境下
+    容易卡在 TLS 握手；部署前已确认默认阿里云镜像包含项目所需版本。
+  -->
+  <mirrors>
+    <mirror>
+      <id>paiops-central-mirror</id>
+      <name>PaiOps Maven Central Mirror</name>
+      <mirrorOf>*</mirrorOf>
+      <url>${env.MAVEN_MIRROR_URL}</url>
+    </mirror>
+  </mirrors>
+</settings>

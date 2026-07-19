@@ -1,0 +1,102 @@
+server:
+  port: ${SERVER_PORT:8084}
+
+spring:
+  application:
+    name: PaiOps
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:backend/.env[.properties]
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java,src/main/resources
+    livereload:
+      enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2s
+      password: ${REDIS_PASSWORD:}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:paiagent}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  ai:
+    openai:
+      # 占位配置，实际使用时通过节点配置动态指定
+      api-key: ${OPENAI_API_KEY:placeholder-api-key}
+      base-url: https://api.openai.com
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.paiagent.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  info:
+    title: PaiOps API
+    description: 智能 Runbook 运维自动化平台 API
+    version: 1.0.0
+
+# MinIO 配置
+minio:
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  accessKey: ${MINIO_ACCESS_KEY:minioadmin}
+  secretKey: ${MINIO_SECRET_KEY:minioadmin}
+  bucketName: ${MINIO_BUCKET:paiops}
+  publicUrl: ${MINIO_PUBLIC_URL:http://localhost:9000}
+
+# PaiOps 兼容配置
+paiagent:
+  auth:
+    # 本地开发未配置 JWT_SECRET 时会自动生成临时强密钥；生产环境请务必显式配置
+    jwt-secret: ${JWT_SECRET:}
+    access-token-expiration-minutes: 120
+    refresh-token-expiration-hours: 168
+  # 默认管理员账户（生产环境必须修改或禁用）
+  # 通过环境变量 APP_AUTH_DEFAULT_USERNAME 和 APP_AUTH_DEFAULT_PASSWORD 配置
+  # 留空则禁用默认账户，必须通过注册功能创建账户
+  default-username: ${APP_AUTH_DEFAULT_USERNAME:admin}
+  default-password: ${APP_AUTH_DEFAULT_PASSWORD:}
+  skills:
+    path: skills
+
+paiops:
+  security:
+    master-key: ${PAIOPS_MASTER_KEY:}
+  mcp:
+    # stdio MCP 会启动本地进程，生产环境默认只允许代码内置的受信任预设。
+    allow-custom-command: ${PAIOPS_MCP_ALLOW_CUSTOM_COMMAND:false}
+  alerts:
+    webhook-token: ${PAIOPS_ALERT_WEBHOOK_TOKEN:}
+  http:
+    allowed-host-patterns: ${PAIOPS_HTTP_ALLOWED_HOSTS:localhost,127.0.0.1,prometheus,loki,kubernetes.default.svc}
+  worker:
+    token: ${PAIOPS_WORKER_TOKEN:}
+    queue-key: ${PAIOPS_WORKER_QUEUE:paiops:execution:queue}
+  execution:
+    default-node-timeout-seconds: ${PAIOPS_NODE_TIMEOUT_SECONDS:300}
+    stale-after-seconds: ${PAIOPS_STALE_AFTER_SECONDS:90}
